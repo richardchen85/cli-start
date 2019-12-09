@@ -1,0 +1,27 @@
+{
+  "name": "cli-start",
+  "version": "1.0.0",
+  "description": "a nodejs cli sample project",
+  "scripts": {
+    "format": "prettier --write 'packages/**/*.js'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,md,css,html}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
