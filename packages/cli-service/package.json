@@ -1,0 +1,18 @@
+{
+  "name": "cli-service",
+  "version": "1.0.0",
+  "description": "cli service",
+  "main": "lib/Service.js",
+  "bin": {
+    "cli-service": "bin/cli-service.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "richard chen",
+  "license": "ISC",
+  "engines": {
+    "node": ">=8"
+  }
+}

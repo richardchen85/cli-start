@@ -23,15 +23,17 @@ yarn add eslint eslint-config-react-app eslint-loader eslint-plugin-flowtype esl
 ## config.js
 
 ```javascript
+const path = require('path');
+
 module.exports = {
   cwd: process.cwd(),
   isDev: true,
   hash: false,
   entry: {
-    app: '/path/to/app.js',
+    app: './src/app.js',
   },
   outputPath: 'dist',
-  publicPath: 'https://cdn.example.com/assets/[hash]/',
+  publicPath: '/',
   alias: {
     '@': path.resolve(__dirname, 'src'),
   },
@@ -61,12 +63,13 @@ module.exports = {
   cssModulesWithAffix: false,
   define: {}, // DefinePlugin 要注入的内容
   ignoreMomentLocale: false,
-  copy: String || Array,
+  copy: '', // String | Array
   externals: {},
   chainConfig: false,
   SPEED_MEASURE: false,
   devtool: '',
-  devServer: {}
+  devServer: {},
+  terserJSOptions: {},
 };
 ```
 

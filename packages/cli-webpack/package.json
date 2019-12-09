@@ -63,5 +63,13 @@
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.9.0",
     "webpackbar": "^4.0.0"
-  }
+  },
+  "files": [
+    "lib",
+    "build.js",
+    "dev.js",
+    "getConfig.js",
+    "webpack-chain.js",
+    "webpack.js"
+  ]
 }
