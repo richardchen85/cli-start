@@ -13,6 +13,12 @@
   "author": "richard chen",
   "license": "ISC",
   "engines": {
-    "node": ">=8"
+    "node": ">=8.0"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "semver": "^6.3.0",
+    "superagent": "^5.1.2",
+    "yargs-parser": "^16.1.0"
   }
 }
