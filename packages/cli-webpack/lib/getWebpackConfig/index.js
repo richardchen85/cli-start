@@ -126,17 +126,23 @@ module.exports = function(opts) {
           regenerator: true,
         },
       ],
+      ['@babel/plugin-syntax-dynamic-import'],
+      ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       ['@babel/plugin-proposal-class-properties', { loose: true }],
-      ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
-      ['@babel/plugin-syntax-dynamic-import'],
+      ...(babel.plugins || []),
+    ],
+  };
+
+  if (!isDev) {
+    babelOpts.plugins = [
+      ...babelOpts.plugins,
       [
         'babel-plugin-transform-react-remove-prop-types',
         { removeImport: true },
       ],
-      ...(babel.plugins || []),
-    ],
-  };
+    ];
+  }
 
   if (opts.disableDynamicImport) {
     babelOpts.plugins = [
