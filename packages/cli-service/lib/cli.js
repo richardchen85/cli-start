@@ -1,7 +1,9 @@
+const { dirname } = require('path');
 const semver = require('semver');
 const chalk = require('chalk');
 const yParser = require('yargs-parser');
 const packageInfo = require('../package.json');
+const buildDevOpts = require('./buildDevOpts');
 
 const script = process.argv[2];
 const args = yParser(process.argv.slice(3));
@@ -27,6 +29,9 @@ const aliasMap = {
   '--help': 'help',
 };
 
+process.env.CLI_DIR = dirname(require.resolve('../package.json'));
+process.env.CLI_VERSION = packageInfo.version;
+
 switch (script) {
   case 'dev':
   case 'build':
@@ -34,6 +39,6 @@ switch (script) {
     break;
   default: {
     const Service = require('./Service');
-    new Service().run(aliasMap[script] || script, args);
+    new Service(buildDevOpts(args)).run(aliasMap[script] || script, args);
   }
 }

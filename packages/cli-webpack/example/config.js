@@ -5,7 +5,7 @@ module.exports = {
   isDev: true,
   hash: false,
   entry: {
-    app: './src/app.js',
+    app: './src/app.ts',
   },
   outputPath: 'dist',
   publicPath: '/',

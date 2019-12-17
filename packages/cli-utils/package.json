@@ -1,0 +1,19 @@
+{
+  "name": "cli-utils",
+  "version": "1.0.0",
+  "description": "cli utils",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "richard chen",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "slash2": "^2.0.0"
+  }
+}

@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "richard chen",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@babel/cli": "^7.7.4",
     "@babel/core": "^7.7.4",

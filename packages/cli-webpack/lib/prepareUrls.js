@@ -2,7 +2,7 @@ const address = require('address');
 const url = require('url');
 const chalk = require('chalk');
 
-module.exports = function prepareUrls(protocol, host, port, base, history) {
+module.exports = function prepareUrls(protocol, host, port, base) {
   const baseInfo = {
     protocol,
     pathname: base || '/',
