@@ -18,9 +18,6 @@ if (!semver.satisfies(nodeVersion, requiredVersion)) {
   process.exit(1);
 }
 
-// 检查 cli 是否最新版本
-require('./upgradeChecker')(packageInfo.version);
-
 // 接收命令行参数，参数较验，执行对应命令
 const aliasMap = {
   '-v': 'version',
@@ -36,6 +33,8 @@ switch (script) {
   case 'dev':
   case 'build':
     require(`./scripts/${script}`);
+    // 检查 cli 是否最新版本
+    require('./upgradeChecker')(packageInfo.version);
     break;
   default: {
     const Service = require('./Service');

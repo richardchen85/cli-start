@@ -3,9 +3,9 @@ const request = require('superagent');
 
 module.exports = async localVersion => {
   try {
-    const { body, status } = await request.get(
-      'http://registry.m.jd.com/@jd/ola-cli',
-    );
+    const { body, status } = await request
+      .get('http://registry.m.jd.com/@jd/ola-cli')
+      .timeout(2000);
     if (status === 200) {
       const latest = body['dist-tags']['latest'].split('.');
       const current = localVersion.split('.');
