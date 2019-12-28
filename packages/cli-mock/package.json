@@ -1,0 +1,23 @@
+{
+  "name": "cli-mock",
+  "version": "1.0.0",
+  "description": "cli mock",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "richard chen",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "chokidar": "^3.3.1",
+    "debug": "^4.1.1",
+    "glob": "^7.1.6",
+    "mockjs": "^1.1.0",
+    "path-to-regexp": "^6.1.0"
+  }
+}

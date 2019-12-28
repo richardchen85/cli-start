@@ -17,8 +17,17 @@ module.exports = class Service {
     }
 
     this.commands = {};
-
     this.config = {};
+    this.hooks = {
+      onStart: [],
+      _beforeServerWithApp: [],
+      beforeMiddlewares: [],
+      afterMiddlewares: [],
+      beforeServer: [],
+      afterServer: [],
+      onFail: [],
+      onCompileDone: [],
+    };
 
     this.plugins = this.resolvePlugins();
   }
@@ -69,6 +78,26 @@ module.exports = class Service {
         };
       });
     });
+  }
+
+  applyHooks(key, opts = {}) {
+    debug(`apply hooks ${key}`);
+    return (this.hooks[key] || []).reduce((memo, { fn }) => {
+      try {
+        return fn({
+          memo,
+          args: opts.args,
+        });
+      } catch (e) {
+        console.error(chalk.red(`hook apply failed: ${e.message}`));
+        throw e;
+      }
+    }, opts.initialValue);
+  }
+
+  registerHook(key, fn) {
+    assert(Array.isArray(this.hooks[key]), `hook: ${key} is not exists`);
+    this.hooks[key].push(fn);
   }
 
   loadEnv() {

@@ -15,6 +15,7 @@ module.exports = function dev(api) {
       const port = parseInt(process.env.PORT || 8000, 10);
       service.port = port;
       process.env.NODE_ENV = 'development';
+      service.applyHooks('onStart');
       require('cli-webpack/dev')({
         cwd,
         port,
@@ -23,21 +24,29 @@ module.exports = function dev(api) {
         proxy: config.proxy || {},
         contentBase: './path-to-no-exists',
         _beforeServerWithApp(app) {
-          //console.log('_beforeServerWithApp', app);
+          service.applyHooks('_beforeServerWithApp', { args: { app } });
         },
-        beforeMiddlewares: [],
-        afterMiddlewares: [],
+        beforeMiddlewares: service.applyHooks('beforeMiddlewares', {
+          initialValue: [],
+        }),
+        afterMiddlewares: service.applyHooks('afterMiddlewares', {
+          initialValue: [],
+        }),
         beforeServer(devServer) {
-          //console.log('beforeServer', devServer);
+          service.applyHooks('beforeServer', { args: { server: devServer } });
         },
         afterServer(devServer, devServerPort) {
-          //console.log('afterServer', devServer, devServerPort);
+          service.applyHooks('afterServer', {
+            args: { server: devServer, port: devServerPort },
+          });
         },
         onFail({ stats }) {
-          //console.log('server onFail', stats);
+          service.applyHooks('onFail', { args: { stats } });
         },
         onCompileDone({ port, stats, server }) {
-          //console.log('server compile done', port, stats, server);
+          service.applyHooks('onCompileDone', {
+            args: { port, stats, server },
+          });
         },
       });
     },
