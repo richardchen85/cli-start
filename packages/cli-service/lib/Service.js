@@ -2,9 +2,10 @@ const { join } = require('path');
 const chalk = require('chalk');
 const assert = require('assert');
 const debug = require('debug');
-const { cloneDeep } = require('lodash');
+const { cloneDeep, assign } = require('lodash');
 const { winPath, loadDotEnv } = require('cli-utils');
 const getPlugins = require('./getPlugins');
+const userConfig = require('./userConfig');
 
 module.exports = class Service {
   constructor({ cwd }) {
@@ -111,6 +112,9 @@ module.exports = class Service {
     this.loadEnv();
 
     this.initPlugins();
+
+    const config = userConfig.getUserConfig({ cwd: this.cwd });
+    this.config = assign({}, this.config, config);
   }
 
   registerCommand(name, opts, fn) {
@@ -143,7 +147,7 @@ module.exports = class Service {
 
     const { fn, opts } = command;
     if (opts.webpack) {
-      this.webpackConfig = require('cli-webpack/getConfig')(this);
+      this.webpackConfig = require('cli-webpack/getConfig')(this.config);
     }
 
     return fn(args);

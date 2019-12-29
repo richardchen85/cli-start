@@ -2,7 +2,6 @@ const createMock = require('cli-mock');
 
 module.exports = function mock(api) {
   const { cwd } = api;
-  const mockPath = cwd + '/mock';
 
   api.service.registerHook(
     '_beforeServerWithApp',
@@ -15,7 +14,7 @@ module.exports = function mock(api) {
 
       if (process.env.MOCK === 'none') return;
 
-      app.use(createMock({ mockPath, watch: true }));
+      createMock({ app, cwd, watch: true });
     },
   );
 };

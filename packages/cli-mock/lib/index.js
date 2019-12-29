@@ -1,6 +1,7 @@
 const path = require('path');
 const urlParser = require('url').parse;
 const qsParser = require('querystring').parse;
+const bodyParser = require('body-parser');
 const Mock = require('mockjs');
 const glob = require('glob');
 const chokidar = require('chokidar');
@@ -8,57 +9,64 @@ const chalk = require('chalk');
 const pathToRegexp = require('path-to-regexp');
 const debug = require('debug')('cli-mock');
 
-// 收集所有 mock 文件的配置
-function getUrlMap(mockPath) {
-  let urlMap = {};
-  glob
-    .sync(path.join(mockPath, '**/*.js'))
-    .map(file => path.resolve(file))
-    .forEach(file => {
-      delete require.cache[file];
-      try {
-        let mockFile = require(file);
-        mockFile = mockFile.default || mockFile;
-        mockFile = mockFile({
-          Mock,
-        });
-        Object.keys(mockFile).forEach(key => {
-          urlMap[key] = mockFile[key];
-        });
-      } catch (e) {
-        console.log(chalk.red(`[mock] fail in file ${file}: \n${e.message}`));
-      }
-    });
-  return urlMap;
-}
+module.exports = function createMock({ app, cwd, watch = true }) {
+  debug(`app: ${app}, cwd: ${cwd}, watch: ${watch}`);
 
-function sendJson(res, data) {
-  res.setHeader('Content-Type', 'application/json;charset=utf-8');
-  res.end(JSON.stringify(data));
-}
+  const root = cwd + '/mock';
 
-function sendText(res, data) {
-  res.setHeader('Content-Type', 'plain/text;charset=utf-8');
-  res.end(data);
-}
+  // 收集所有 mock 文件的配置
+  function getUrlMap(mockPath) {
+    let urlMap = {};
+    glob
+      .sync(path.join(mockPath, '**/*.js'))
+      .map(file => path.resolve(file))
+      .forEach(file => {
+        delete require.cache[file];
+        try {
+          let mockFile = require(file);
+          mockFile = mockFile.default || mockFile;
+          mockFile = mockFile({
+            Mock,
+          });
+          Object.keys(mockFile).forEach(key => {
+            urlMap[key] = mockFile[key];
+          });
+        } catch (e) {
+          console.log(chalk.red(`[mock] fail in file ${file}: \n${e.message}`));
+        }
+      });
+    return urlMap;
+  }
 
-module.exports = function createMock({ mockPath, watch = true }) {
-  debug(`mockPath: ${mockPath}, watch: ${watch}`);
+  function sendJson(res, data) {
+    res.setHeader('Content-Type', 'application/json;charset=utf-8');
+    res.end(JSON.stringify(data));
+  }
 
-  let urlMap = getUrlMap(mockPath);
+  function sendText(res, data) {
+    res.setHeader('Content-Type', 'plain/text;charset=utf-8');
+    res.end(data);
+  }
+
+  let urlMap = getUrlMap(root);
   debug(`urlMap: ${urlMap}`);
 
   // 文件变动监听
   if (watch) {
-    const watcher = chokidar.watch(mockPath, { ignoreInitial: true });
+    const watcher = chokidar.watch(root, { ignoreInitial: true });
     watcher.on('all', (event, file) => {
       console.log(chalk.yellow(`[${event}] ${file}, reload mock data`));
-      urlMap = getUrlMap(mockPath);
+      urlMap = getUrlMap(root);
       debug(`urlMap: ${urlMap}`);
     });
   }
 
-  return function(req, res, next) {
+  // body-parser middleware
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+
+  // mock middleware
+  app.use((req, res, next) => {
     // 将解析后的 url 赋给 req
     Object.assign(req, urlParser(req.url));
     req.query = qsParser(req.query);
@@ -104,5 +112,5 @@ module.exports = function createMock({ mockPath, watch = true }) {
     } else {
       next();
     }
-  };
+  });
 };

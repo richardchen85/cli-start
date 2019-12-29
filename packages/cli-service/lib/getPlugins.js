@@ -11,8 +11,10 @@ module.exports = function getPlugins(opts = {}) {
   // 内置插件
   const builtInPlugins = [
     './plugins/commands/dev',
+    './plugins/commands/build',
     './plugins/commands/version',
     './plugins/commands/help',
+    './plugins/mock',
   ];
 
   const pluginsObj = [
