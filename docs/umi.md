@@ -75,5 +75,59 @@ require('../src/cli.js');
 
 ## umi-build-dev
 
+### src/Service.js
 
+* constructor({ cwd })
+  * this.pkg = require(join(this.cwd, 'package.json'))
+  * registerBabel({ cwd })
+    * require('af-webpack/registerBabel)()
+    * 主要是预设一些 babel 配置
+  * this.commands = {}
+  * this.pluginHooks = {}
+  * this.generators = {}
+  * this.UmiError = UmiError
+  * this.config = UserConfig.getConfig({ cwd, service: this })
+    * service.applyPlugins('modifyDefaultConfig')
+    * 获取默认的用户配置
+  * this.plugins = this.resolvePlugins()
+  * this.extraPlugins = []
+  * this.paths = getPaths(this)
+    * 'umi-core/src/getPaths.ts': 各种文件的 path
+    * 各种模板文件的 path
+* resolvePlugins()
+  * require('./getPlugins.js')({ cwd, plugins })
+    * 内置插件
+      * './plugins/commands/dev',
+      * './plugins/mock'
+      * ...
+    * getUserPlugins() 嵌入用户定义的插件
+    * 插件配置： ['/path/to/plugin.js', opts]
+    * 每个插件是 { id, apply: require('plugins.js'), opts } 
+  * 合并 this.config.plugins
+* registerCommand(name, opts, fn)
+  * this.commands[name] = { fn, opts }
+* run(name = 'help', args)
+  * this.init()
+    * this.loadEnv()
+      * loadDotEnv('.env')
+      * loadDotEnv('.env.local')
+    * this.initPlugins()
+      * this.plugins.map(plugin => this.initPlugin(plugin))
+        * 运行每个 plugin 初始化函数
+        * { id, apply, opts } = plugin
+        * api = new PluginApi(id, this)
+        * api.onOptionChange = fn => plugin.onOptionChange = fn
+        * apply(api, opts)
+        * plugin._api = api
+    * reload user config
+    * userConfig = new UserConfig(this)
+    * merge(this.config, userConfig.getConfig())
+  * this.runCommand(name, args)
+* runCommand(rawName, rawArgs = {}, remoteLog)
+  * command = this.commands[name]
+  * 判断 command 是否存在
+  * { fn, opts } = command
+  * if (opts.webpack)
+    * this.webpackConfig = require('./getWebpackConfig')
+  * return fn(args, { remoteLog })
 
