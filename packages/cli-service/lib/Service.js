@@ -28,6 +28,8 @@ module.exports = class Service {
       afterServer: [],
       onFail: [],
       onCompileDone: [],
+      onBuildSuccess: [],
+      onBuildFail: [],
     };
 
     this.plugins = this.resolvePlugins();
@@ -83,7 +85,7 @@ module.exports = class Service {
 
   applyHooks(key, opts = {}) {
     debug(`apply hooks ${key}`);
-    return (this.hooks[key] || []).reduce((memo, { fn }) => {
+    return (this.hooks[key] || []).reduce((memo, fn) => {
       try {
         return fn({
           memo,
@@ -147,7 +149,10 @@ module.exports = class Service {
 
     const { fn, opts } = command;
     if (opts.webpack) {
-      this.webpackConfig = require('cli-webpack/getConfig')(this.config);
+      this.webpackConfig = require('cli-webpack/getConfig')({
+        cwd: this.cwd,
+        ...this.config,
+      });
     }
 
     return fn(args);

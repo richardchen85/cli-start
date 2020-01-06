@@ -1,6 +1,6 @@
 const path = require('path');
-const getWebpackConfig = require('../src/getWebpackConfig');
-const dev = require('../src/dev');
+const getWebpackConfig = require('../lib/getWebpackConfig');
+const dev = require('../lib/dev');
 const config = require('./config');
 
 const webpackConfig = getWebpackConfig({

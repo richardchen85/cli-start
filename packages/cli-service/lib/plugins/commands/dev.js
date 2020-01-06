@@ -22,7 +22,7 @@ module.exports = function dev(api) {
         base: config.base,
         webpackConfig: service.webpackConfig,
         proxy: config.proxy || {},
-        contentBase: './path-to-no-exists',
+        contentBase: './src',
         _beforeServerWithApp(app) {
           service.applyHooks('_beforeServerWithApp', { args: { app } });
         },
