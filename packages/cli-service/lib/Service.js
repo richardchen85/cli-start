@@ -20,6 +20,8 @@ module.exports = class Service {
     this.commands = {};
     this.config = {};
     this.hooks = {
+      baseWebpackConfig: [],
+      modifyWebpackConfig: [],
       onStart: [],
       _beforeServerWithApp: [],
       beforeMiddlewares: [],
@@ -40,10 +42,11 @@ module.exports = class Service {
   }
 
   initPlugin(plugin) {
-    const { apply, opts } = plugin;
+    const { id, apply, opts } = plugin;
     try {
       assert(typeof apply === 'function', `plugin must export a function`);
       const api = {
+        debug: debug(`cli-plugin: ${id}`),
         service: this,
         cwd: this.cwd,
         config: this.config,
@@ -116,7 +119,7 @@ module.exports = class Service {
     this.initPlugins();
 
     const config = userConfig.getUserConfig({ cwd: this.cwd });
-    this.config = assign({}, this.config, config);
+    assign(this.config, config);
   }
 
   registerCommand(name, opts, fn) {
@@ -149,10 +152,14 @@ module.exports = class Service {
 
     const { fn, opts } = command;
     if (opts.webpack) {
-      this.webpackConfig = require('cli-webpack/getConfig')({
-        cwd: this.cwd,
-        ...this.config,
+      this.webpackConfig = require('./getWebpackConfig')(this, {
+        watch: args.w || args.watch,
       });
+      // this.webpackConfig = require('cli-webpack/getConfig')({
+      //   cwd: this.cwd,
+      //   ...this.config,
+      // });
+      // console.log(this.webpackConfig)
     }
 
     return fn(args);

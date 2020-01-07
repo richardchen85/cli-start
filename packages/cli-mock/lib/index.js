@@ -1,12 +1,10 @@
 const path = require('path');
-const urlParser = require('url').parse;
-const qsParser = require('querystring').parse;
 const bodyParser = require('body-parser');
 const Mock = require('mockjs');
 const glob = require('glob');
 const chokidar = require('chokidar');
 const chalk = require('chalk');
-const pathToRegexp = require('path-to-regexp');
+const { pathToRegexp } = require('path-to-regexp');
 const debug = require('debug')('cli-mock');
 
 module.exports = function createMock({ app, cwd, watch = true }) {
@@ -67,11 +65,7 @@ module.exports = function createMock({ app, cwd, watch = true }) {
 
   // mock middleware
   app.use((req, res, next) => {
-    // 将解析后的 url 赋给 req
-    Object.assign(req, urlParser(req.url));
-    req.query = qsParser(req.query);
     req.params = {};
-
     const urlKey = Object.keys(urlMap).find(key => {
       // 寻找匹配当前 url 的 mock 数据
       const keys = [];
@@ -89,7 +83,7 @@ module.exports = function createMock({ app, cwd, watch = true }) {
         return false;
       }
 
-      const matched = pathToRegexp(pattern, keys, null).exec(req.pathname);
+      const matched = pathToRegexp(pattern, keys).exec(req.path);
       // 支持路径参数，附加到 req.params
       if (matched) {
         keys.forEach((key, i) => {

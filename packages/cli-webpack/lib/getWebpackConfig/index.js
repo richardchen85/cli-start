@@ -109,14 +109,14 @@ module.exports = function(opts) {
   const babel = opts.babel || {};
   const babelOpts = {
     presets: [
-      '@babel/preset-env',
-      '@babel/preset-react',
-      '@babel/preset-typescript',
+      require.resolve('@babel/preset-env'),
+      require.resolve('@babel/preset-react'),
+      require.resolve('@babel/preset-typescript'),
       ...(babel.presets || []),
     ],
     plugins: [
       [
-        '@babel/plugin-transform-runtime',
+        require.resolve('@babel/plugin-transform-runtime'),
         {
           // 文档未标记配置，用以将 @babel/runtime 指向 cli
           absoluteRuntime: dirname(
@@ -126,10 +126,16 @@ module.exports = function(opts) {
           regenerator: true,
         },
       ],
-      ['@babel/plugin-syntax-dynamic-import'],
-      ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
+      [require.resolve('@babel/plugin-syntax-dynamic-import')],
+      [
+        require.resolve('@babel/plugin-proposal-object-rest-spread'),
+        { useBuiltIns: true },
+      ],
+      [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+      [
+        require.resolve('@babel/plugin-proposal-class-properties'),
+        { loose: true },
+      ],
       ...(babel.plugins || []),
     ],
   };
@@ -138,7 +144,7 @@ module.exports = function(opts) {
     babelOpts.plugins = [
       ...babelOpts.plugins,
       [
-        'babel-plugin-transform-react-remove-prop-types',
+        require.resolve('babel-plugin-transform-react-remove-prop-types'),
         { removeImport: true },
       ],
     ];

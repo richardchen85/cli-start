@@ -15,6 +15,7 @@ module.exports = function getPlugins(opts = {}) {
     './plugins/commands/version',
     './plugins/commands/help',
     './plugins/mock',
+    './plugins/webpackConfig',
   ];
 
   const pluginsObj = [

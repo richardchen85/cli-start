@@ -1,0 +1,11 @@
+{
+  "name": "func-test",
+  "version": "1.0.0",
+  "description": "functional test example",
+  "scripts": {
+    "dev": "../../packages/cli-service/bin/cli-service.js dev"
+  },
+  "keywords": [],
+  "author": "richard chen",
+  "license": "MIT"
+}

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const debug = require('debug')('cli-service:commands/dev');
 
 module.exports = function dev(api) {
@@ -22,7 +23,7 @@ module.exports = function dev(api) {
         base: config.base,
         webpackConfig: service.webpackConfig,
         proxy: config.proxy || {},
-        contentBase: './src',
+        //contentBase: './path-do-not-exists',
         _beforeServerWithApp(app) {
           service.applyHooks('_beforeServerWithApp', { args: { app } });
         },
@@ -41,6 +42,7 @@ module.exports = function dev(api) {
           });
         },
         onFail({ stats }) {
+          console.log(chalk.red(stats.compilation.errors));
           service.applyHooks('onFail', { args: { stats } });
         },
         onCompileDone({ port, stats, server }) {

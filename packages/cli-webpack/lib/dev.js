@@ -50,6 +50,7 @@ module.exports = function dev({
   const compiler = webpack(webpackConfig);
   const urls = prepareUrls(PROTOCOL, HOST, port, base);
   let server = null;
+  let isFirstCompile = true;
 
   compiler.hooks.done.tap('cli-webpack done', stats => {
     if (stats.hasErrors()) {
@@ -64,40 +65,46 @@ module.exports = function dev({
     }
 
     let copied = '';
-    try {
-      require('clipboardy').writeSync(urls.localUrlForBrowser);
-      copied = chalk.dim('(copied to clipboard)');
-    } catch (e) {
-      copied = chalk.red(`(copy to clipboard failed)`);
+    if (isFirstCompile) {
+      try {
+        require('clipboardy').writeSync(urls.localUrlForBrowser);
+        copied = chalk.dim('(copied to clipboard)');
+      } catch (e) {
+        copied = chalk.red(`(copy to clipboard failed)`);
+      }
+      console.log();
+      console.log(
+        [
+          `  App running at:`,
+          `  - Local:   ${chalk.cyan(urls.localUrlForTerminal)} ${copied}`,
+          urls.lanUrlForTerminal
+            ? `  - Network: ${chalk.cyan(urls.lanUrlForTerminal)}`
+            : '',
+        ].join('\n'),
+      );
+      console.log();
     }
-    console.log();
-    console.log(
-      [
-        `  App running at:`,
-        `  - Local:   ${chalk.cyan(urls.localUrlForTerminal)} ${copied}`,
-        urls.lanUrlForTerminal
-          ? `  - Network: ${chalk.cyan(urls.lanUrlForTerminal)}`
-          : '',
-      ].join('\n'),
-    );
-    console.log();
 
     onCompileDone({
       port,
+      isFirstCompile,
       stats,
       server,
     });
 
-    openBrowser(urls.localUrlForBrowser);
-    send({
-      type: DONE,
-      urls: {
-        local: urls.localUrlForTerminal,
-        lan: urls.lanUrlForTerminal,
-        rawLocal: urls.localUrlForBrowser,
-        rawLanUrl: urls.rawLanUrl,
-      },
-    });
+    if (isFirstCompile) {
+      isFirstCompile = false;
+      openBrowser(urls.localUrlForBrowser);
+      send({
+        type: DONE,
+        urls: {
+          local: urls.localUrlForTerminal,
+          lan: urls.lanUrlForTerminal,
+          rawLocal: urls.localUrlForBrowser,
+          rawLanUrl: urls.rawLanUrl,
+        },
+      });
+    }
   });
 
   const serverConfig = {
