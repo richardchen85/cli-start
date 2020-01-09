@@ -11,7 +11,7 @@ module.exports = function mock(api) {
     return {
       ...memo,
       entry: isDev ? { cli: [entryScript] } : { cli: [entryScript] },
-      publicPath: '/',
+      publicPath: isDev ? '/' : config.publicPath ? config.publicPath : '/',
       define: {
         'process.env.BASE_URL': config.base || '/',
         ...(config.define || {}),

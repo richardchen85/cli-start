@@ -86,9 +86,9 @@ module.exports = function dev({
     }
 
     onCompileDone({
-      port,
       isFirstCompile,
       stats,
+      port,
       server,
     });
 

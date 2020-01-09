@@ -65,7 +65,7 @@ module.exports = {
   ignoreMomentLocale: false,
   copy: '', // String | Array
   externals: {},
-  chainConfig: false,
+  chainConfig: false, // webpackChainConfig
   SPEED_MEASURE: false,
   devtool: '',
   devServer: {},

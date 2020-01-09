@@ -22,6 +22,7 @@ module.exports = class Service {
     this.hooks = {
       baseWebpackConfig: [],
       modifyWebpackConfig: [],
+      chainConfig: [], // webpackChainConfig
       onStart: [],
       _beforeServerWithApp: [],
       beforeMiddlewares: [],
@@ -155,11 +156,6 @@ module.exports = class Service {
       this.webpackConfig = require('./getWebpackConfig')(this, {
         watch: args.w || args.watch,
       });
-      // this.webpackConfig = require('cli-webpack/getConfig')({
-      //   cwd: this.cwd,
-      //   ...this.config,
-      // });
-      // console.log(this.webpackConfig)
     }
 
     return fn(args);

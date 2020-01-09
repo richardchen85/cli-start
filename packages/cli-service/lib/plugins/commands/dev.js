@@ -43,11 +43,10 @@ module.exports = function dev(api) {
         },
         onFail({ stats }) {
           console.log(chalk.red(stats.compilation.errors));
-          service.applyHooks('onFail', { args: { stats } });
         },
-        onCompileDone({ port, stats, server }) {
+        onCompileDone({ isFirstCompile, stats, port, server }) {
           service.applyHooks('onCompileDone', {
-            args: { port, stats, server },
+            args: { isFirstCompile, stats, port, server },
           });
         },
       });
