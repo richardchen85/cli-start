@@ -60,10 +60,7 @@ function pluginToPath(plugins, { cwd }) {
         opts,
       ];
     } catch (e) {
-      throw new Error({
-        code: 'ERR_CORE_PLUGIN_RESOLVE_FAILED',
-        message: `Plugin ${chalk.underline.cyan(path)} can't be resolved`,
-      });
+      throw new Error(`Plugin ${chalk.underline.cyan(path)} can't be resolved`);
     }
   });
 }
@@ -85,13 +82,13 @@ function getUserPlugins(plugins, { cwd }) {
       });
     }
     return {
-      id: path.replace(makesureLastSlash(cwd), 'user:'),
+      id: path.replace(makeSureLastSlash(cwd), 'user:'),
       apply: apply.default || apply,
       opts,
     };
   });
 }
 
-function makesureLastSlash(path) {
+function makeSureLastSlash(path) {
   return path.slice(-1) === '/' ? path : `${path}/`;
 }

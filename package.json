@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "description": "a nodejs cli sample project",
   "scripts": {
+    "test": "jest --coverage --color",
     "format": "prettier --write 'packages/**/*.js'"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "husky": "^3.1.0",
+    "jest": "^24.9.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
   },

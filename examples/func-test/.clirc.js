@@ -10,4 +10,5 @@ module.exports = {
   chainConfig: webpackConfig => {
     // webpackConfig.entry('a').add('a.js');
   },
+  plugins: [['./plugins/test.js', { test: 'test' }]],
 };

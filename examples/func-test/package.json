@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "functional test example",
   "scripts": {
-    "dev": "../../packages/cli-service/bin/cli-service.js dev"
+    "dev": "../../packages/cli-service/bin/cli-service.js dev",
+    "test-command": "../../packages/cli-service/bin/cli-service.js test --test"
   },
   "keywords": [],
   "author": "richard chen",

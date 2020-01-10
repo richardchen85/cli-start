@@ -18,7 +18,7 @@ module.exports = class Service {
     }
 
     this.commands = {};
-    this.config = {};
+    this.config = userConfig.getUserConfig({ cwd: this.cwd });
     this.hooks = {
       baseWebpackConfig: [],
       modifyWebpackConfig: [],
@@ -39,7 +39,21 @@ module.exports = class Service {
   }
 
   resolvePlugins() {
-    return getPlugins({ cwd: winPath(this.cwd), plugins: [] });
+    try {
+      assert(
+        Array.isArray(this.config.plugins || []),
+        `Configure item ${chalk.underline.cyan(
+          'plugins',
+        )} should be Array, but got ${chalk.red(typeof this.config.plugins)}`,
+      );
+      return getPlugins({
+        cwd: winPath(this.cwd),
+        plugins: this.config.plugins || [],
+      });
+    } catch (e) {
+      console.log(chalk.red(e));
+      process.exit(1);
+    }
   }
 
   initPlugin(plugin) {
