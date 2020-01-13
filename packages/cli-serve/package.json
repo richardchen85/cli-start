@@ -1,0 +1,31 @@
+{
+  "name": "cli-serve",
+  "version": "1.0.0",
+  "description": "web server based on express",
+  "bin": {
+    "cli-serve": "./bin/cli-serve.js"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/richardchen85/cli-start",
+    "directory": "packages/cli-serve"
+  },
+  "author": "richard chen",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "clipboardy": "^2.1.0",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "serve-static": "^1.14.1",
+    "yargs-parser": "^16.1.0"
+  }
+}

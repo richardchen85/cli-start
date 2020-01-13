@@ -13,7 +13,7 @@ module.exports = function dev(api) {
     (args = {}) => {
       debug(args);
 
-      const port = parseInt(process.env.PORT || 8000, 10);
+      const port = parseInt(process.env.PORT || 3000, 10);
       service.port = port;
       process.env.NODE_ENV = 'development';
       service.applyHooks('onStart');

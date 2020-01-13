@@ -9,6 +9,11 @@
   },
   "keywords": [],
   "author": "richard chen",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/richardchen85/cli-start",
+    "directory": "packages/cli-webpack"
+  },
   "license": "MIT",
   "dependencies": {
     "@babel/cli": "^7.7.4",
