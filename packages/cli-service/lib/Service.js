@@ -2,7 +2,6 @@ const { join } = require('path');
 const chalk = require('chalk');
 const assert = require('assert');
 const debug = require('debug');
-const { cloneDeep, assign } = require('lodash');
 const { winPath, loadDotEnv } = require('cli-utils');
 const getPlugins = require('./getPlugins');
 const userConfig = require('./userConfig');
@@ -56,48 +55,23 @@ module.exports = class Service {
     }
   }
 
-  initPlugin(plugin) {
-    const { id, apply, opts } = plugin;
-    try {
-      assert(typeof apply === 'function', `plugin must export a function`);
-      const api = {
-        debug: debug(`cli-plugin: ${id}`),
-        service: this,
-        cwd: this.cwd,
-        config: this.config,
-        webpackConfig: this.webpackConfig,
-        pkg: this.pkg,
-      };
-      apply(api, opts);
-      plugin._api = api;
-    } catch (e) {
-      console.error(e);
-      process.exit(1);
-    }
-  }
-
   initPlugins() {
-    const plugins = cloneDeep(this.plugins);
-    this.plugins = [];
-    plugins.forEach(plugin => {
-      this.initPlugin(plugin);
-      this.plugins.push(plugin);
-    });
-
-    // Throw error for methods that can't be called after plugins is initialized
-    this.plugins.forEach(plugin => {
-      [
-        'onOptionChange',
-        'register',
-        'registerMethod',
-        'registerPlugin',
-      ].forEach(method => {
-        plugin._api[method] = () => {
-          throw new Error(
-            `api.${method}() should not be called after plugin is initialized.`,
-          );
+    this.plugins.forEach(({ id, apply, opts }) => {
+      try {
+        assert(typeof apply === 'function', `plugin must export a function`);
+        const api = {
+          debug: debug(`cli-plugin: ${id}`),
+          service: this,
+          cwd: this.cwd,
+          config: this.config,
+          webpackConfig: this.webpackConfig,
+          pkg: this.pkg,
         };
-      });
+        apply(api, opts);
+      } catch (e) {
+        console.error(e);
+        process.exit(1);
+      }
     });
   }
 
@@ -132,9 +106,6 @@ module.exports = class Service {
     this.loadEnv();
 
     this.initPlugins();
-
-    const config = userConfig.getUserConfig({ cwd: this.cwd });
-    assign(this.config, config);
   }
 
   registerCommand(name, opts, fn) {
@@ -152,10 +123,7 @@ module.exports = class Service {
 
   run(name = 'help', args) {
     this.init();
-    return this.runCommand(name, args);
-  }
 
-  runCommand(name, args = {}) {
     debug(`command name: ${name}, args: ${JSON.stringify(args)}`);
     const command = this.commands[name];
     if (!command) {
